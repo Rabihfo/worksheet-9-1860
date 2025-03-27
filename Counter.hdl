@@ -3,11 +3,15 @@ CHIP Counter {
     OUT out[16];
 
     PARTS:
-    Mux16(a=nextValue, b[16]=false, sel=reset, out=resetMuxOut);
-    Mux16(a=currentValue, b=incrementedValue, sel=inc, out=nextValue);
-    Inc16(in=currentValue, out=incrementedValue);
-    Register(in=resetMuxOut, load=true, out=currentValue);
-    
-    // Output the current value of the counter
-    OUT out = currentValue;
+    // Ensure b=false is a valid 16-bit bus (should be false[16])
+    Mux16(a=a2, b=false[16], sel=reset, out=a3); 
+
+    // Ensure proper connection of buses
+    Mux16(a=a4, b=a5, sel=inc, out=a2);
+
+    // Increment a 16-bit value
+    Inc16(in=a4, out=a5);
+
+    // Store result in Register
+    Register(in=a3, load=true, out=a4, out=out);
 }

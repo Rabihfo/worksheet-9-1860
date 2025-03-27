@@ -2,39 +2,20 @@ CHIP P2S {
     IN indata[4], enable, load;
     OUT sout, complete;
 
+
     PARTS:
-    // Store individual bits from indata
-    Bit(in=indata[0], load=load, out=d1);
-    Bit(in=indata[1], load=load, out=d2);
-    Bit(in=indata[2], load=load, out=d3);
-    Bit(in=indata[3], load=load, out=d4);
-    
-    // Enable signal management
-    Bit(in=enable, load=active, out=enabled);
-    
-    // Counter for selecting which bit to output
+    Bit4(in=indata, load=load, out1=d1, out2=d2, out3=d3, out4=d4);
+    Not(in=comp,out=notcomplete);
+    And(a=notcomplete, b=enabled, out=notchoice);
+    Not(in=notchoice, out=choice);
+    Bit(in=enable, load=choice, out=enabled);
     Counter(inc=enabled, reset=reset, out=count);
     Last2(in=count, out=count2);
-    
-    // Multiplexer to select the appropriate output bit
-    Mux4Way(a=d1, b=d2, c=d3, d=d4, sel=count2, out=sout_mux);
-    
-    // Logic for stopping and controlling output
-    And(a=done, b=enabled, out=stop);
-    Mux(a=false, b=sout_mux, sel=enabled, out=sout_pre);
-    Mux(a=sout_pre, b=false, sel=stop, out=sout);
-
-    // Completion detection and reset logic
-    Not(in=done, out=not_done);
-    And(a=not_done, b=enabled, out=active);
-    
-    // Store completion status
-    Bit(in=done, load=true, out=done_reg);
-
-    // Fix: Replaced And2 with two separate And gates
-    And(a=count2, b=true, out=done);
-    And(a=count2, b=true, out=complete);
-    
-    // Reset logic
-    Mux(a=false, b=true, sel=done_reg, out=reset);
+    Mux4Way(a=d1, b=d2, c=d3, d=d4, sel=count2, out=souts);
+    Mux(a=false, b=souts, sel=enabled, out=souts1);
+    And2(a=count2, b=true, out=comp, out=complete);
+    And(a=compd, b=enabled, out=break);
+    Bit(in=comp, load=true, out=compd);
+    Mux(a=souts1, b=false, sel=break, out=sout);
+    Mux(a=false, b=true, sel=compd, out=reset);
 }

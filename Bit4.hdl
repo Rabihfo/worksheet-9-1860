@@ -1,4 +1,4 @@
-CHIP P2S {
+CHIP Bit4 {
     IN indata[4], enable, load;
     OUT sout, complete;
 

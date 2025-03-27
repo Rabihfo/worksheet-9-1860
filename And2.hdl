@@ -4,6 +4,7 @@ CHIP And2 {
 
     PARTS:
     And(a=a[0], b=b[0], out=a1);
-    And(a=a[1], b=b[1], out=a1);
-    And(a=a1, b=b1, out=out);
+    And(a=a[1], b=b[1], out=a2);
+    Or(a=a1, b=a2, out=out);  // Use OR to combine results
 }
+

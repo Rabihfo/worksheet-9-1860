@@ -3,7 +3,10 @@ CHIP P2S {
     OUT sout, complete;
 
     PARTS:
-    Bit4(in=indata, load=load, out1=d1, out2=d2, out3=d3, out4=d4);
+    Bit(in=indata[0], load=load, out=d1);
+    Bit(in=indata[1], load=load, out=d2);
+    Bit(in=indata[2], load=load, out=d3);
+    Bit(in=indata[3], load=load, out=d4);
     
     Bit(in=enable, load=active, out=enabled);
     

@@ -3,10 +3,10 @@ CHIP Counter {
     OUT out[16];
 
     PARTS:
-    // Ensure b=false is a valid 16-bit bus (should be false[16])
-    Mux16(a=a2, b=false[16], sel=reset, out=a3); 
+    // Use a proper 16-bit constant (all zeros) instead of false
+    Mux16(a=a2, b=0, sel=reset, out=a3); 
 
-    // Ensure proper connection of buses
+    // Ensure correct data flow
     Mux16(a=a4, b=a5, sel=inc, out=a2);
 
     // Increment a 16-bit value

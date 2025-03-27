@@ -2,18 +2,12 @@ CHIP Counter {
     IN inc, reset;
     OUT out[16];
 
-
     PARTS:
-    Mux16(a=a2, b=false, sel=reset, out=a3); 
-
-
-    Mux16(a=a4, b=a5, sel=inc,out=a2);
-
-
-    Inc16(in=a4, out=a5);
-
-
-    Register(in=a3,load=true,out=a4,out=out);
-
-
+    Mux16(a=nextValue, b[16]=false, sel=reset, out=resetMuxOut);
+    Mux16(a=currentValue, b=incrementedValue, sel=inc, out=nextValue);
+    Inc16(in=currentValue, out=incrementedValue);
+    Register(in=resetMuxOut, load=true, out=currentValue);
+    
+    // Output the current value of the counter
+    OUT out = currentValue;
 }

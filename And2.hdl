@@ -1,10 +1,8 @@
 CHIP And2 {
     IN a[2], b[2];
-    OUT out;
+    OUT out[2];  // Output should be a 2-bit value
 
     PARTS:
-    And(a=a[0], b=b[0], out=a1);
-    And(a=a[1], b=b[1], out=a2);
-    Or(a=a1, b=a2, out=out);  // Use OR to combine results
+    And(a=a[0], b=b[0], out=out[0]);  // First bit AND operation
+    And(a=a[1], b=b[1], out=out[1]);  // Second bit AND operation
 }
-

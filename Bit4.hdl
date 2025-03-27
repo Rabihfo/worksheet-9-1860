@@ -1,10 +1,10 @@
 CHIP Bit4 {
     IN in[4], load;
-    OUT out1, out2, out3, out4;
+    OUT out[4];  // 4-bit output instead of separate single-bit outputs
 
     PARTS:
-    Bit (in=in[0], load=load, out=out1);
-    Bit (in=in[1], load=load, out=out2);
-    Bit (in=in[2], load=load, out=out3);
-    Bit (in=in[3], load=load, out=out4);
+    Bit (in=in[0], load=load, out=out[0]);
+    Bit (in=in[1], load=load, out=out[1]);
+    Bit (in=in[2], load=load, out=out[2]);
+    Bit (in=in[3], load=load, out=out[3]);
 }

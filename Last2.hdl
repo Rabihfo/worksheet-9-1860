@@ -2,8 +2,8 @@ CHIP Last2 {
     IN in[16];
     OUT out[2];
 
-
     PARTS:
-    And(a=in[0], b=in[0],out=out[0]);
-    And(a=in[1], b=in[1], out=out[1]);
+    // Extract the last two bits from the 16-bit input
+    Buf(a=in[14], out=out[0]);
+    Buf(a=in[15], out=out[1]);
 }

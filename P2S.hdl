@@ -1,31 +1,36 @@
 CHIP P2S {
     IN indata[4], enable, load;
     OUT sout, complete;
-
     PARTS:
-    // Store the input data bits using correct output naming
-    Bit4(in=indata, load=load, out[0]=d1, out[1]=d2, out[2]=d3, out[3]=d4);
+   
+    Register(in[0..3] = indata, in[4..15] = false, load = load, out[0] = bit1, out[1] = bit2, out[2] = bit3, out[3] = bit4);
+    Not(in=load, out=notload);
+    Not(in=enable, out=notenable);
+    And(a=notload, b=enable, out=shift);
 
-    // 4-bit counter to track bit selection
-    Counter(inc=enable, reset=reset, out=count);
+    Not(in=shift0, out=notshift0);
+    Not(in=shift1, out=notshift1);
+    Not(in=shift2, out=notshift2);
+    Not(in=shift3, out=notshift3);
 
-    // Extract last 2 bits of counter to select which bit to output
-    Last2(in=count, out=count2);
+    And(a=notshift0, b=notshift1, out=a1);
+    And(a = notshift2, b = notshift3, out = a2);
+    And(a = a1, b = a2, out = a3);
+    And(a = a3, b = enable, out = enabled);
 
-    // Select the correct bit based on counter value
-    Mux4Way(a=d1, b=d2, c=d3, d=d4, sel=count2, out=souts);
+    DFF(in = enabled, out = shift0);
+    DFF(in = shift0, out = shift1);
+    DFF(in = shift1, out = shift2);
+    DFF(in = shift2, out = shift3);
 
-    // Only output when enabled
-    Mux(a=false, b=souts, sel=enable, out=souts1);
+    And(a=bit1, b=shift0, out=thebit1);
+    And(a=bit2, b=shift1, out=thebit2);
+    And (a=bit3, b=shift2, out=thebit3);
+    And(a=bit4, b=shift3, out=thebit4);
 
-    // Check if all bits have been sent
-    And(a=count2[0], b=count2[1], out=comp);
-    Bit(in=comp, load=true, out=compd);
-    Mux(a=false, b=true, sel=compd, out=reset);
-    
-    // Handle completion signal
-    And(a=compd, b=enable, out=complete);
+    Or(a=thebit1, b=thebit2, out=bit1or2);
+    Or(a=thebit3, b=thebit4, out=bit3or4);
+    Or(a=bit1or2, b=bit3or4, out=sout);
 
-    // Output the serial data
-    Mux(a=souts1, b=false, sel=complete, out=sout);
+    And(a=true, b=shift3, out=complete);
 }

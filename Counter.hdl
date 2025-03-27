@@ -2,16 +2,18 @@ CHIP Counter {
     IN inc, reset;
     OUT out[16];
 
+
     PARTS:
-    // Use a proper 16-bit constant (all zeros) instead of false
-    Mux16(a=a2, b=0, sel=reset, out=a3); 
+    Mux16(a=a2, b=false, sel=reset, out=a3); 
 
-    // Ensure correct data flow
-    Mux16(a=a4, b=a5, sel=inc, out=a2);
 
-    // Increment a 16-bit value
+    Mux16(a=a4, b=a5, sel=inc,out=a2);
+
+
     Inc16(in=a4, out=a5);
 
-    // Store result in Register
-    Register(in=a3, load=true, out=a4, out=out);
+
+    Register(in=a3,load=true,out=a4,out=out);
+
+
 }

@@ -1,0 +1,11 @@
+CHIP Last2 {
+    IN in[16];
+    OUT out[2];
+
+    PARTS:
+    Not(in=in[0], out=a);
+    Nand(a=a, b=a, out=out[0]);
+
+    Not(in=in[1], out=b);
+    Nand(a=b, b=b, out=out[1]);
+}

@@ -1,0 +1,9 @@
+CHIP And2 {
+    IN a[2], b[2];
+    OUT out;
+
+    PARTS:
+    And(a=a[0], b=b[0], out=a1);
+    And(a=a[1], b=b[1], out=a1);
+    And(a=a1, b=b1, out=out);
+}
